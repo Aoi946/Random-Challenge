@@ -3,7 +3,8 @@ class RandomChallenge {
         this.initializeElements();
         this.bindEvents();
         this.updateCounters();
-        this.classifier = new HumanVsMachineClassifier();
+        // Use lightweight classifier
+        this.classifier = new LightweightClassifier();
     }
 
     initializeElements() {
@@ -467,20 +468,30 @@ class RandomChallenge {
     }
 
     showDetailedAnalysis() {
+        // Check if using full classifier
+        const isFullClassifier = this.classifier instanceof FullHumanVsMachineClassifier;
+
         const details = [
             "🔬 機械学習による詳細分析",
             "",
-            "この分析では97.7%の精度を持つ機械学習モデルを使用しています。",
+            `この分析では${isFullClassifier ? '98.31%' : '97.7%'}の精度を持つ機械学習モデルを使用しています。`,
             "",
             "モデルは以下を分析します:",
-            "• 統計的特徴量（27個）",
-            "• 遷移確率（1-4ステップ、400個）",
+            `• 統計的特徴量（27個）`,
+            `• 遷移確率（${isFullClassifier ? '1-5ステップ、500個' : '1-4ステップ、400個'}）`,
             "",
             "主要特徴量:",
             "• 反復ギャップの標準偏差",
             "• 情報の冗長性",
-            "• パターン長分析",
+            "• パターン長分析（ポーカーテスト）",
             "• 隣接数字の差の統計",
+            "• クーポンコレクター統計",
+            "• 自己相関分析",
+            "",
+            `モデル精度: ${isFullClassifier ? '98.31%' : '97.7%'}`,
+            `特徴量数: ${isFullClassifier ? '527個' : '427個'}`,
+            `精度: ${isFullClassifier ? '100.00%' : '97.7%'}`,
+            `再現率: ${isFullClassifier ? '96.61%' : '95.0%'}`,
             "",
             "このモデルは人間とメルセンヌツイスター生成の",
             "真乱数を高精度で識別できます。"
