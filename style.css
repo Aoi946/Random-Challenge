@@ -219,6 +219,12 @@ header h1 {
     opacity: 0.95;
 }
 
+.confidence-display {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+
 .score-display {
     display: flex;
     justify-content: center;
@@ -375,6 +381,85 @@ header h1 {
     content: '•';
     color: var(--primary-color);
     font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.ml-analysis {
+    margin-bottom: 30px;
+}
+
+.feature-analysis {
+    margin-bottom: 30px;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.feature-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: var(--background);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.feature-name {
+    flex: 2;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.feature-value {
+    flex: 1;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    color: var(--text-secondary);
+}
+
+.feature-contribution {
+    flex: 1;
+    text-align: right;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+}
+
+.feature-contribution.positive {
+    color: var(--success-color);
+}
+
+.feature-contribution.negative {
+    color: var(--error-color);
+}
+
+.recommendations {
+    margin-bottom: 30px;
+}
+
+.recommendations h5 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.recommendations ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recommendations li {
+    padding: 8px 0;
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: 20px;
+}
+
+.recommendations li::before {
+    content: '💡';
     position: absolute;
     left: 0;
 }
