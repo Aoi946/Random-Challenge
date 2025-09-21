@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Challenge</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎲 Random Number Challenge</h1>
+            <p class="subtitle">あなたの数列はどれほどランダムですか？</p>
+        </header>
+
+        <main>
+            <div class="card input-section">
+                <h2>数字を入力してください</h2>
+                <p class="instruction">
+                    ランダムだと思う数字を入力してください。機械学習モデルがその数列の
+                    ランダム性を真乱数（メルセンヌツイスター）と比較して判定します。
+                </p>
+
+                <div class="input-area">
+                    <textarea
+                        id="numberInput"
+                        placeholder="例: 1234567890 または 1,2,3,4,5,6,7,8,9,0 または改行区切り"
+                        rows="5"
+                    ></textarea>
+                    <div class="input-info">
+                        <span id="charCount">0文字</span>
+                        <span id="numberCount">0個の数字</span>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button id="analyzeBtn" class="btn-primary">解析開始</button>
+                    <button id="clearBtn" class="btn-secondary">クリア</button>
+                    <button id="generateSampleBtn" class="btn-secondary">サンプル生成</button>
+                </div>
+            </div>
+
+            <div class="card result-section" id="resultSection" style="display: none;">
+                <h2>解析結果</h2>
+                <div id="resultContent">
+                    <!-- 結果がここに表示されます -->
+                </div>
+            </div>
+
+            <div class="card loading-section" id="loadingSection" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>解析中...</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Random Number Challenge</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
