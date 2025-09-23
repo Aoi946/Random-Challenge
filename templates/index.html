@@ -100,6 +100,15 @@
             background: #dee2e6;
         }
 
+        .btn-accent {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: linear-gradient(135deg, #218838 0%, #1db584 100%);
+        }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -245,6 +254,7 @@
                     <button id="analyzeBtn" class="btn btn-primary">解析開始</button>
                     <button id="clearBtn" class="btn btn-secondary">クリア</button>
                     <button id="generateSampleBtn" class="btn btn-secondary">サンプル生成</button>
+                    <button id="generateRandomBtn" class="btn btn-accent">真乱数300桁生成</button>
                 </div>
             </div>
 
@@ -272,6 +282,7 @@
                 this.analyzeBtn = document.getElementById('analyzeBtn');
                 this.clearBtn = document.getElementById('clearBtn');
                 this.generateSampleBtn = document.getElementById('generateSampleBtn');
+                this.generateRandomBtn = document.getElementById('generateRandomBtn');
                 this.charCount = document.getElementById('charCount');
                 this.numberCount = document.getElementById('numberCount');
                 this.resultSection = document.getElementById('resultSection');
@@ -284,6 +295,7 @@
                 this.analyzeBtn.addEventListener('click', () => this.analyzeNumbers());
                 this.clearBtn.addEventListener('click', () => this.clearInput());
                 this.generateSampleBtn.addEventListener('click', () => this.generateSample());
+                this.generateRandomBtn.addEventListener('click', () => this.generateTrueRandom());
             }
 
             updateCounters() {
@@ -410,6 +422,30 @@
                     Math.floor(Math.random() * 10000000000).toString().padStart(10, '0') // 実際のランダム
                 ];
                 this.numberInput.value = samples[Math.floor(Math.random() * samples.length)];
+                this.updateCounters();
+            }
+
+            generateTrueRandom() {
+                // 300桁の真乱数を生成（Mersenne Twister相当の品質）
+                let randomSequence = '';
+
+                // crypto.getRandomValuesを使用して暗号学的に安全な乱数を生成
+                if (window.crypto && window.crypto.getRandomValues) {
+                    const array = new Uint8Array(300);
+                    window.crypto.getRandomValues(array);
+
+                    // 0-9の範囲に変換
+                    for (let i = 0; i < 300; i++) {
+                        randomSequence += (array[i] % 10).toString();
+                    }
+                } else {
+                    // フォールバック: Math.random()を使用
+                    for (let i = 0; i < 300; i++) {
+                        randomSequence += Math.floor(Math.random() * 10).toString();
+                    }
+                }
+
+                this.numberInput.value = randomSequence;
                 this.updateCounters();
             }
 
