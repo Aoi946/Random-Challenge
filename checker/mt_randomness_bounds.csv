@@ -1,0 +1,28 @@
+metric,description,expected_mean,expected_std,bound_95_lower,bound_95_upper,bound_99_lower,bound_99_upper,interpretation
+redundancy,Shannon entropy-based redundancy (0=random 1=predictable),0.008,0.005,0.001,0.020,0.000,0.023,Higher values indicate less randomness
+coupon_mean,Mean steps to collect all 10 digits,29.3,5.0,25.0,35.0,14.3,44.3,Lower values may indicate patterns higher values may indicate avoidance
+coupon_std,Standard deviation of coupon collection,10.0,3.0,6.0,15.0,1.0,19.0,Very low std may indicate regularity
+repetition_gap_mean,Mean gap between repeated digits,9.5,1.0,8.0,11.0,6.5,12.5,Theoretical expectation ~9.5 for uniform distribution
+repetition_gap_std,Standard deviation of repetition gaps,9.0,1.5,7.0,12.0,4.5,13.5,Natural variation in gap lengths
+adjacent,Adjacent patterns score,0.17,0.05,0.10,0.25,0.02,0.32,Proportion of adjacent digit relationships
+tpi,Turning Point Index,0.95,0.08,0.85,1.05,0.71,1.19,Expected ~2/3 ≈ 0.67 for random scaled differently here
+pl1,Poker-like test 1,1.0,0.15,0.8,1.2,0.55,1.45,Test for patterns in subsequences
+pl2,Poker-like test 2,1.0,0.15,0.8,1.2,0.55,1.45,Test for patterns in subsequences
+pl3,Poker-like test 3,0.8,0.6,0.0,2.0,0.0,2.6,Higher order pattern detection
+pl4,Poker-like test 4,0.5,0.8,0.0,3.0,0.0,2.9,Higher order pattern detection
+pl5,Poker-like test 5,1.0,2.0,0.0,8.0,0.0,7.0,Highest order pattern detection
+rp,Runs and patterns,0.95,0.08,0.85,1.05,0.71,1.19,Analysis of runs in the sequence
+autocorr_lag1,Lag-1 autocorrelation,0.0,0.08,-0.15,0.15,-0.24,0.24,Correlation between adjacent elements
+adjacent_diff_mean,Mean of adjacent differences,3.3,0.3,3.0,3.8,2.4,4.2,Average absolute difference between consecutive digits
+adjacent_diff_std,Std of adjacent differences,2.4,0.3,2.0,2.8,1.5,3.3,Variation in consecutive differences
+max_min_ratio,Ratio of max to min digit frequencies,1.7,0.4,1.2,2.5,0.5,2.9,Balance in digit usage
+freq_0,Frequency of digit 0,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 0 in sequence
+freq_1,Frequency of digit 1,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 1 in sequence
+freq_2,Frequency of digit 2,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 2 in sequence
+freq_3,Frequency of digit 3,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 3 in sequence
+freq_4,Frequency of digit 4,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 4 in sequence
+freq_5,Frequency of digit 5,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 5 in sequence
+freq_6,Frequency of digit 6,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 6 in sequence
+freq_7,Frequency of digit 7,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 7 in sequence
+freq_8,Frequency of digit 8,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 8 in sequence
+freq_9,Frequency of digit 9,0.10,0.02,0.06,0.14,0.04,0.16,Proportion of digit 9 in sequence

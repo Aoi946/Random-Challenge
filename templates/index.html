@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Challenge - Local</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: monospace;
+            resize: vertical;
+        }
+
+        .input-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-section {
+            margin-top: 30px;
+        }
+
+        .result-header {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .result-header.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .result-header.warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+
+        .result-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .score-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-circle {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .score-label {
+            font-size: 1em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .feedback ul, .recommendations ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .feedback li, .recommendations li {
+            margin: 8px 0;
+            padding: 8px 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .model-info {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎲 Random Number Challenge</h1>
+            <p class="subtitle">Python分類機による高精度ランダム性判定</p>
+            <div class="model-info">
+                <strong>モデル性能:</strong> 精度98.31% | 527特徴量 | ロジスティック回帰
+            </div>
+        </header>
+
+        <main>
+            <div class="card input-section">
+                <h2>数字を入力してください</h2>
+                <p>
+                    ランダムだと思う数字を入力してください。Python機械学習モデルがその数列の
+                    ランダム性を真乱数（メルセンヌツイスター）と比較して判定します。
+                </p>
+
+                <div style="margin: 20px 0;">
+                    <textarea
+                        id="numberInput"
+                        placeholder="例: 1234567890 または 1,2,3,4,5,6,7,8,9,0 または改行区切り"
+                    ></textarea>
+                    <div class="input-info">
+                        <span id="charCount">0文字</span>
+                        <span id="numberCount">0個の数字</span>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button id="analyzeBtn" class="btn btn-primary">解析開始</button>
+                    <button id="clearBtn" class="btn btn-secondary">クリア</button>
+                    <button id="generateSampleBtn" class="btn btn-secondary">サンプル生成</button>
+                </div>
+            </div>
+
+            <div id="loadingSection" class="card loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Python分類機で解析中...</p>
+            </div>
+
+            <div id="resultSection" class="card result-section" style="display: none;">
+                <div id="resultContent"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        class LocalRandomChallenge {
+            constructor() {
+                this.initializeElements();
+                this.bindEvents();
+                this.updateCounters();
+            }
+
+            initializeElements() {
+                this.numberInput = document.getElementById('numberInput');
+                this.analyzeBtn = document.getElementById('analyzeBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.generateSampleBtn = document.getElementById('generateSampleBtn');
+                this.charCount = document.getElementById('charCount');
+                this.numberCount = document.getElementById('numberCount');
+                this.resultSection = document.getElementById('resultSection');
+                this.resultContent = document.getElementById('resultContent');
+                this.loadingSection = document.getElementById('loadingSection');
+            }
+
+            bindEvents() {
+                this.numberInput.addEventListener('input', () => this.updateCounters());
+                this.analyzeBtn.addEventListener('click', () => this.analyzeNumbers());
+                this.clearBtn.addEventListener('click', () => this.clearInput());
+                this.generateSampleBtn.addEventListener('click', () => this.generateSample());
+            }
+
+            updateCounters() {
+                const text = this.numberInput.value;
+                const numbers = this.extractNumbers(text);
+
+                this.charCount.textContent = `${text.length}文字`;
+                this.numberCount.textContent = `${numbers.length}個の数字`;
+
+                this.analyzeBtn.disabled = numbers.length < 10;
+            }
+
+            extractNumbers(text) {
+                return text.replace(/[^\d]/g, '').split('').map(d => parseInt(d)).filter(n => !isNaN(n));
+            }
+
+            async analyzeNumbers() {
+                const numbers = this.extractNumbers(this.numberInput.value);
+
+                if (numbers.length < 10) {
+                    alert('数字を最低10個入力してください');
+                    return;
+                }
+
+                this.showLoading();
+
+                try {
+                    const response = await fetch('/classify', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ sequence: numbers })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.error) {
+                        throw new Error(result.error);
+                    }
+
+                    this.displayResults(result, numbers);
+                } catch (error) {
+                    alert(`エラー: ${error.message}`);
+                    this.hideLoading();
+                }
+            }
+
+            displayResults(analysis, numbers) {
+                const { result, details, feedback, recommendations } = analysis;
+                const isTrueRandom = result.isMachineRandom;
+                const confidence = Math.round(result.confidence * 100);
+                const humanProb = Math.round(result.humanProbability * 100);
+
+                const resultHTML = `
+                    <div class="result-header ${isTrueRandom ? 'success' : 'warning'}">
+                        <div class="result-icon">${isTrueRandom ? '🎉' : '🤔'}</div>
+                        <h3>${isTrueRandom ? 'おめでとうございます！' : '残念ながら...'}</h3>
+                        <p>
+                            ${isTrueRandom ?
+                                'あなたの数列はメルセンヌツイスター級のランダム性です！' :
+                                '人間らしいパターンが検出されました。'}
+                        </p>
+                        <p><strong>信頼度: ${confidence}%</strong></p>
+                    </div>
+
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <div class="score-value">${isTrueRandom ? 100 - humanProb : humanProb}</div>
+                            <div class="score-label">${isTrueRandom ? '機械乱数度' : '人間度'}</div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span>入力数字数</span>
+                            <span>${details.inputLength}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>判定</span>
+                            <span>${result.isMachineRandom ? '機械乱数' : '人間生成'}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>使用特徴量</span>
+                            <span>${details.featuresCount}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>モデル精度</span>
+                            <span>${details.accuracy}</span>
+                        </div>
+                    </div>
+
+                    <div class="feedback">
+                        <h4>🔍 分析結果</h4>
+                        <ul>
+                            ${feedback.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="recommendations">
+                        <h4>💡 アドバイス</h4>
+                        <ul>
+                            ${recommendations.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    ${analysis.deviationReport ? this.generateDeviationReport(analysis.deviationReport) : ''}
+
+                    <div class="buttons">
+                        <button onclick="app.tryAgain()" class="btn btn-primary">もう一度挑戦</button>
+                    </div>
+                `;
+
+                this.resultContent.innerHTML = resultHTML;
+                this.hideLoading();
+                this.showResults();
+            }
+
+            generateSample() {
+                const samples = [
+                    '1234567890', // 連続
+                    '5555555555', // 反復
+                    '3816924570', // ランダム風
+                    Math.floor(Math.random() * 10000000000).toString().padStart(10, '0') // 実際のランダム
+                ];
+                this.numberInput.value = samples[Math.floor(Math.random() * samples.length)];
+                this.updateCounters();
+            }
+
+            clearInput() {
+                this.numberInput.value = '';
+                this.updateCounters();
+                this.resultSection.style.display = 'none';
+            }
+
+            tryAgain() {
+                this.clearInput();
+                this.numberInput.focus();
+            }
+
+            toggleHistogram(histogramId) {
+                const histogramDiv = document.getElementById(histogramId);
+                if (histogramDiv) {
+                    const isVisible = histogramDiv.style.display !== 'none';
+                    histogramDiv.style.display = isVisible ? 'none' : 'block';
+
+                    // ボタンのテキストも変更
+                    const buttonContainer = document.querySelector(`button[onclick*="${histogramId}"]`);
+                    if (buttonContainer) {
+                        buttonContainer.textContent = isVisible ? '📊 真乱数分布を表示' : '📊 真乱数分布を非表示';
+                    }
+                }
+            }
+
+            toggleDetailedExplanation(detailsId) {
+                const detailsDiv = document.getElementById(detailsId);
+                if (detailsDiv) {
+                    const isVisible = detailsDiv.style.display !== 'none';
+                    detailsDiv.style.display = isVisible ? 'none' : 'block';
+
+                    // ボタンのテキストも変更
+                    const buttonContainer = document.querySelector(`button[onclick*="${detailsId}"]`);
+                    if (buttonContainer) {
+                        buttonContainer.textContent = isVisible ? '📖 指標の詳細説明' : '📖 詳細説明を非表示';
+                    }
+                }
+            }
+
+            showLoading() {
+                this.loadingSection.style.display = 'block';
+                this.resultSection.style.display = 'none';
+            }
+
+            hideLoading() {
+                this.loadingSection.style.display = 'none';
+            }
+
+            showResults() {
+                this.resultSection.style.display = 'block';
+            }
+
+            generateDeviationReport(deviationReport) {
+                if (!deviationReport || !deviationReport.outliers || deviationReport.outliers.length === 0) {
+                    return '';
+                }
+
+                const { summary, outliers, improvements } = deviationReport;
+
+                return `
+                    <div class="deviation-report" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                        <h4>🔍 詳細なランダム性分析</h4>
+
+                        <div class="deviation-summary" style="margin: 15px 0;">
+                            <p><strong>分析結果:</strong> ${summary.outliers_count}個の指標が真乱数の範囲から外れています</p>
+                            <p><strong>合格指標:</strong> ${summary.within_bounds_count}/${summary.total_metrics}個</p>
+                        </div>
+
+                        <div class="outliers-section">
+                            <h5>⚠️ 改善が必要な指標</h5>
+                            ${outliers.map((outlier, index) => `
+                                <div class="outlier-item" style="background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #e74c3c; border-radius: 4px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong>${outlier.explanation}</strong>
+                                        <span style="color: #e74c3c;">${outlier.deviation_type === 'high' ? '高すぎる' : '低すぎる'}</span>
+                                    </div>
+                                    <div style="margin: 8px 0; font-size: 14px; color: #666;">
+                                        現在値: <strong>${outlier.actual.toFixed(4)}</strong> |
+                                        ${outlier.expected_min !== null && outlier.expected_max !== null ?
+                                            `期待範囲: ${outlier.expected_min.toFixed(4)} - ${outlier.expected_max.toFixed(4)}` :
+                                            `期待平均: ${outlier.expected_mean?.toFixed(4) || 'N/A'}`
+                                        }
+                                    </div>
+                                    <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; font-size: 14px;">
+                                        💡 ${outlier.improvement_tip}
+                                    </div>
+
+                                    <!-- 詳細説明とヒストグラム表示ボタン -->
+                                    <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                        <button onclick="app.toggleDetailedExplanation('details-${index}')"
+                                                style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                            📖 指標の詳細説明
+                                        </button>
+                                        <button onclick="app.toggleHistogram('histogram-${index}')"
+                                                style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                            📊 真乱数分布を表示
+                                        </button>
+                                    </div>
+
+                                    <!-- 詳細説明セクション -->
+                                    <div id="details-${index}" style="display: none; margin-top: 15px; background: #e9ecef; padding: 15px; border-radius: 4px; font-size: 14px;">
+                                        <h6 style="color: #495057; margin-bottom: 10px;">${outlier.detailed_explanation.title}</h6>
+                                        <div style="margin-bottom: 8px;">
+                                            <strong>説明:</strong> ${outlier.detailed_explanation.description}
+                                        </div>
+                                        <div style="margin-bottom: 8px;">
+                                            <strong>計算式:</strong> ${outlier.detailed_explanation.formula}
+                                        </div>
+                                        <div style="margin-bottom: 8px;">
+                                            <strong>値の範囲:</strong> ${outlier.detailed_explanation.range}
+                                        </div>
+                                        <div>
+                                            <strong>解釈:</strong> ${outlier.detailed_explanation.interpretation}
+                                        </div>
+                                    </div>
+
+                                    <!-- ヒストグラムセクション -->
+                                    <div id="histogram-${index}" style="display: none; margin-top: 15px; text-align: center;">
+                                        <img src="${outlier.histogram_url}"
+                                             style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"
+                                             alt="${outlier.metric} distribution"
+                                             onload="this.style.display='block'"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                        <div style="display: none; color: #666; font-style: italic;">ヒストグラムを読み込めませんでした</div>
+                                        <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                                            メルセンヌツイスター乱数による${outlier.metric}の分布
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        ${improvements && improvements.length > 0 ? `
+                        <div class="improvements-section" style="margin-top: 20px;">
+                            <h5>🎯 総合的な改善提案</h5>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                ${improvements.map(suggestion => `<li style="margin: 8px 0;">${suggestion}</li>`).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        // アプリケーション初期化
+        const app = new LocalRandomChallenge();
+    </script>
+</body>
+</html>
