@@ -37,3 +37,4 @@ yarn-error.log*
 # Large binary files - distributed via GitHub Releases
 mt_figures/*.png
 exported_classifier/*.pkl
+mt_figures.zip
