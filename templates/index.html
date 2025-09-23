@@ -67,6 +67,26 @@
             color: #666;
         }
 
+        .input-warning {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-warning.error {
+            background: #ffeaa7;
+            color: #d63031;
+            border: 1px solid #fdcb6e;
+        }
+
+        .input-warning.info {
+            background: #74b9ff;
+            color: white;
+            border: 1px solid #0984e3;
+        }
+
         .buttons {
             display: flex;
             gap: 10px;
@@ -248,6 +268,7 @@
                         <span id="charCount">0文字</span>
                         <span id="numberCount">0個の数字</span>
                     </div>
+                    <div id="inputWarning" class="input-warning" style="display: none;"></div>
                 </div>
 
                 <div class="buttons">
@@ -283,6 +304,7 @@
                 this.generateRandomBtn = document.getElementById('generateRandomBtn');
                 this.charCount = document.getElementById('charCount');
                 this.numberCount = document.getElementById('numberCount');
+                this.inputWarning = document.getElementById('inputWarning');
                 this.resultSection = document.getElementById('resultSection');
                 this.resultContent = document.getElementById('resultContent');
                 this.loadingSection = document.getElementById('loadingSection');
@@ -302,7 +324,24 @@
                 this.charCount.textContent = `${text.length}文字`;
                 this.numberCount.textContent = `${numbers.length}個の数字`;
 
-                this.analyzeBtn.disabled = numbers.length < 10;
+                // 桁数に応じた警告表示と解析ボタンの制御
+                if (numbers.length === 0) {
+                    this.inputWarning.style.display = 'none';
+                    this.analyzeBtn.disabled = true;
+                } else if (numbers.length < 100) {
+                    this.inputWarning.style.display = 'block';
+                    this.inputWarning.className = 'input-warning error';
+                    this.inputWarning.textContent = `⚠️ 文字数が少なすぎるので解析できません（現在：${numbers.length}桁、最低：100桁必要）`;
+                    this.analyzeBtn.disabled = true;
+                } else if (numbers.length < 300) {
+                    this.inputWarning.style.display = 'block';
+                    this.inputWarning.className = 'input-warning info';
+                    this.inputWarning.textContent = `💡 300桁入力を推奨します（現在：${numbers.length}桁）`;
+                    this.analyzeBtn.disabled = false;
+                } else {
+                    this.inputWarning.style.display = 'none';
+                    this.analyzeBtn.disabled = false;
+                }
             }
 
             extractNumbers(text) {
@@ -312,8 +351,8 @@
             async analyzeNumbers() {
                 const numbers = this.extractNumbers(this.numberInput.value);
 
-                if (numbers.length < 10) {
-                    alert('数字を最低10個入力してください');
+                if (numbers.length < 100) {
+                    alert('解析には最低100桁が必要です');
                     return;
                 }
 
