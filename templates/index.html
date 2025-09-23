@@ -253,7 +253,6 @@
                 <div class="buttons">
                     <button id="analyzeBtn" class="btn btn-primary">解析開始</button>
                     <button id="clearBtn" class="btn btn-secondary">クリア</button>
-                    <button id="generateSampleBtn" class="btn btn-secondary">サンプル生成</button>
                     <button id="generateRandomBtn" class="btn btn-accent">真乱数300桁生成</button>
                 </div>
             </div>
@@ -281,7 +280,6 @@
                 this.numberInput = document.getElementById('numberInput');
                 this.analyzeBtn = document.getElementById('analyzeBtn');
                 this.clearBtn = document.getElementById('clearBtn');
-                this.generateSampleBtn = document.getElementById('generateSampleBtn');
                 this.generateRandomBtn = document.getElementById('generateRandomBtn');
                 this.charCount = document.getElementById('charCount');
                 this.numberCount = document.getElementById('numberCount');
@@ -294,7 +292,6 @@
                 this.numberInput.addEventListener('input', () => this.updateCounters());
                 this.analyzeBtn.addEventListener('click', () => this.analyzeNumbers());
                 this.clearBtn.addEventListener('click', () => this.clearInput());
-                this.generateSampleBtn.addEventListener('click', () => this.generateSample());
                 this.generateRandomBtn.addEventListener('click', () => this.generateTrueRandom());
             }
 
@@ -412,17 +409,6 @@
                 this.resultContent.innerHTML = resultHTML;
                 this.hideLoading();
                 this.showResults();
-            }
-
-            generateSample() {
-                const samples = [
-                    '1234567890', // 連続
-                    '5555555555', // 反復
-                    '3816924570', // ランダム風
-                    Math.floor(Math.random() * 10000000000).toString().padStart(10, '0') // 実際のランダム
-                ];
-                this.numberInput.value = samples[Math.floor(Math.random() * samples.length)];
-                this.updateCounters();
             }
 
             generateTrueRandom() {
