@@ -405,6 +405,20 @@ def get_detailed_metric_explanation(metric_name):
             'formula': '1 - (一度しか現れないバイグラム数 / 全バイグラム数)',
             'range': '0.0 〜 1.0',
             'interpretation': '低い値: パターン繰り返し少なくランダム性高い / 高い値: パターン繰り返し多い'
+        },
+        'adjacent_diff_mean': {
+            'title': '隣接差分平均 (Adjacent Difference Mean)',
+            'description': '連続する数字間の絶対差分の平均値を測定します。隣接数字がどれだけ離れているかを示します。',
+            'formula': 'mean: |z[i+1] - z[i]| の平均',
+            'range': '0.0以上',
+            'interpretation': 'mean（平均差）が3.3付近: ランダムな数列での期待値（0-9の数字の場合）/ 低い値: 隣接数字が近い値になりやすい / 高い値: 隣接数字が離れた値になりやすい'
+        },
+        'adjacent_diff_std': {
+            'title': '隣接差分標準偏差 (Adjacent Difference Std)',
+            'description': '連続する数字間の絶対差分のばらつき（標準偏差）を測定します。差のばらつきを示します。',
+            'formula': 'std: |z[i+1] - z[i]| の標準偏差',
+            'range': '0.0以上',
+            'interpretation': 'std（標準偏差）: 差のばらつきを示す / 低い値: 隣接差が一定 / 高い値: 隣接差が大きくばらつく'
         }
     }
 
