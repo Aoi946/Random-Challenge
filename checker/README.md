@@ -263,10 +263,10 @@ python randomness_checker.py
 
 ## 開発者向け情報
 
-### カスタム境界値の作成
+### カスタム境界値の使用
 ```python
-# 独自のデータセットから境界値を生成
-custom_bounds = create_custom_bounds(your_mt_data)
+# 独自の境界値テーブルを読み込み
+custom_bounds = pd.read_csv('your_custom_bounds.csv')
 result = check_sequence_randomness(test_metrics, bounds_table=custom_bounds)
 ```
 

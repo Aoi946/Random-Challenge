@@ -19,15 +19,8 @@ The classifier uses **527 features** derived from:
 ## Package Contents
 
 ### Core Files
-- `human_machine_classifier.pkl` - Trained classifier (LogisticRegression + StandardScaler)
-- `export_classifier.py` - Main classifier class and export functionality
+- `human_machine_classifier.pkl` - Trained classifier (LogisticRegression + StandardScaler) - **Download from GitHub Releases**
 - `calculate_features.py` - Feature calculation from raw sequences
-
-### Metadata Files
-- `required_features.csv` - Complete list of 527 required features
-- `feature_importance.csv` - Feature importance scores from the model
-- `classifier_info.csv` - Model configuration and metadata
-- `performance_metrics.csv` - Detailed performance metrics
 
 ### Dependencies
 - `stat/lib/` - Statistical metrics calculation modules
@@ -41,22 +34,26 @@ The classifier uses **527 features** derived from:
   - `analyze_self_transitions.py` - Self-transition analysis
   - `visualize_transitions.py` - Visualization tools
 
-### Examples
-- `usage_example.py` - Basic usage example for predictions
 
 ## Quick Start
 
 ### 1. Load and Use Classifier
 
 ```python
-from export_classifier import HumanMachineClassifier
+import pickle
+from calculate_features import calculate_all_features
 
-# Load the trained classifier
-classifier = HumanMachineClassifier.load('human_machine_classifier.pkl')
+# Load the trained classifier (download from GitHub Releases first)
+with open('human_machine_classifier.pkl', 'rb') as f:
+    classifier = pickle.load(f)
 
-# Make predictions (assuming you have calculated features)
-predictions = classifier.predict(features)  # 0=Machine, 1=Human
-probabilities = classifier.predict_proba(features)
+# Calculate features from sequence
+sequence = [1, 4, 7, 2, 9, 0, 3, 8, 5, 6, 1, 3, 9, 2, 7]
+features = calculate_all_features(sequence)
+
+# Make predictions
+prediction = classifier.predict([features])  # 0=Machine, 1=Human
+probability = classifier.predict_proba([features])
 ```
 
 ### 2. Calculate Features from Raw Sequences
@@ -77,11 +74,12 @@ prediction = classifier.predict(features)
 ### 3. Complete Pipeline
 
 ```python
+import pickle
 from calculate_features import calculate_all_features
-from export_classifier import HumanMachineClassifier
 
 # Load classifier
-classifier = HumanMachineClassifier.load('human_machine_classifier.pkl')
+with open('human_machine_classifier.pkl', 'rb') as f:
+    classifier = pickle.load(f)
 
 # Your sequence data
 sequences = [
@@ -97,8 +95,8 @@ for i, sequence in enumerate(sequences):
     features = calculate_all_features(sequence)
 
     # Make prediction
-    prediction = classifier.predict(features)[0]
-    probability = classifier.predict_proba(features)[0]
+    prediction = classifier.predict([features])[0]
+    probability = classifier.predict_proba([features])[0]
 
     results.append({
         'sequence_id': i,
@@ -196,10 +194,10 @@ This package requires:
 
 2. **Feature Mismatch**
    ```python
-   # Check required features
-   required_features = classifier.get_required_features()
-   print(f"Expected {len(required_features)} features")
-   print("Missing features:", set(required_features) - set(your_features.columns))
+   # Features are calculated automatically from calculate_all_features()
+   # Ensure your sequence has sufficient length (≥50 digits recommended)
+   features = calculate_all_features(your_sequence)
+   print(f"Calculated {len(features)} features")
    ```
 
 3. **Sequence Length Issues**
